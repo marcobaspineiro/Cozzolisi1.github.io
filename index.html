@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COZZOLISI - Sistema de Gestión</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            color: #e74c3c;
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+        
+        h1 span {
+            font-style: italic;
+            font-size: 0.8em;
+            color: #777;
+        }
+        
+        h2 {
+            color: #e74c3c;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        h3 {
+            color: #333;
+            margin-top: 20px;
+        }
+        
+        nav {
+            background-color: #333;
+            padding: 10px 0;
+            margin-bottom: 30px;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover, nav ul li a.active {
+            background-color: #e74c3c;
+        }
+        
+        .content-section {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        /* Estilos para pedidos */
+        .order-panel {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .order-form {
+            flex: 1;
+        }
+        
+        .order-summary {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .order-type-options {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .order-type-option {
+            padding: 8px 15px;
+            background-color: #f0f0f0;
+            margin-right: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+        }
+        
+        .order-type-option.active {
+            background-color: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        button {
+            padding: 8px 15px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #c0392b;
+        }
+        
+        button.secondary {
+            background-color: #3498db;
+        }
+        
+        button.danger {
+            background-color: #e74c3c;
+        }
+        
+        button.success {
+            background-color: #2ecc71;
+        }
+        
+        .order-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .order-items th {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .order-items td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .order-items tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        
+        .action-btn.delete {
+            background-color: #e74c3c;
+        }
+        
+        .divider {
+            border-top: 1px solid #ddd;
+            margin: 20px 0;
+        }
+        
+        /* Estilos para facturación */
+        .invoice-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .invoice-list {
+            flex: 1;
+        }
+        
+        .invoice-details {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .invoice-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .invoice-items th, .invoice-items td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        .invoice-total {
+            text-align: right;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        
+        /* Estilos para reportes */
+        .report-filters {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .report-results {
+            margin-top: 20px;
+        }
+        
+        .sales-chart {
+            width: 100%;
+            height: 300px;
+            background-color: #f9f9f9;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>COZZOLISI <span>Auténtica pizza italiana en Bolivia</span></h1>
+        </header>
+        
+        <nav>
+            <ul>
+                <li><a href="#" class="nav-link active" data-section="inicio">Inicio</a></li>
+                <li><a href="#" class="nav-link" data-section="pedidos">Pedidos</a></li>
+                <li><a href="#" class="nav-link" data-section="facturacion">Facturación</a></li>
+                <li><a href="#" class="nav-link" data-section="reportes">Reportes</a></li>
+            </ul>
+        </nav>
+        
+        <!-- Sección de Inicio -->
+        <section id="inicio" class="content-section active">
+            <h2>Bienvenido al Sistema de Gestión COZZOLISI</h2>
+            <p>Sistema integral para la administración de pedidos, facturación y reportes de ventas.</p>
+            <div style="text-align: center; margin-top: 30px;">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Pizza italiana" style="max-width: 100%; border-radius: 5px;">
+            </div>
+        </section>
+        
+        <!-- Sección de Pedidos -->
+        <section id="pedidos" class="content-section">
+            <h2>Administración de Pedidos</h2>
+            
+            <div class="order-panel">
+                <div class="order-form">
+                    <div class="form-group">
+                        <label>Tipo de Pedido:</label>
+                        <div class="order-type-options">
+                            <div class="order-type-option active" data-type="mesa">Mesa</div>
+                            <div class="order-type-option" data-type="llevar">Para Llevar</div>
+                            <div class="order-type-option" data-type="domicilio">Domicilio</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="mesa-group">
+                        <label for="mesa">Mesa:</label>
+                        <select id="mesa">
+                            <option value="">Seleccione una mesa</option>
+                            <option value="1">Mesa 1</option>
+                            <option value="2">Mesa 2</option>
+                            <option value="3">Mesa 3</option>
+                            <option value="4">Mesa 4</option>
+                            <option value="5">Mesa 5</option>
+                            <option value="6">Mesa 6</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="cliente-group" style="display: none;">
+                        <label for="cliente">Cliente:</label>
+                        <input type="text" id="cliente" placeholder="Nombre del cliente">
+                    </div>
+                    
+                    <div class="form-group" id="direccion-group" style="display: none;">
+                        <label for="direccion">Dirección:</label>
+                        <input type="text" id="direccion" placeholder="Dirección de entrega">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="item">Item del Menú:</label>
+                        <select id="item">
+                            <option value="">Seleccione un item</option>
+                            <option value="pizza-margarita">Pizza Margarita - 45 Bs.</option>
+                            <option value="pizza-pepperoni">Pizza Pepperoni - 50 Bs.</option>
+                            <option value="pizza-hawaiana">Pizza Hawaiana - 55 Bs.</option>
+                            <option value="lasagna">Lasagna - 40 Bs.</option>
+                            <option value="spaghetti">Spaghetti Bolognesa - 35 Bs.</option>
+                            <option value="ensalada">Ensalada César - 25 Bs.</option>
+                            <option value="refresco">Refresco - 8 Bs.</option>
+                            <option value="jugo">Jugo Natural - 12 Bs.</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cantidad">Cantidad:</label>
+                        <input type="number" id="cantidad" min="1" value="1">
+                    </div>
+                    
+                    <button id="agregar-item" class="success">Agregar al Pedido</button>
+                </div>
+                
+                <div class="order-summary">
+                    <h3>Resumen del Pedido</h3>
+                    <div id="order-info">
+                        <p><strong>Tipo:</strong> <span id="order-type-display">Mesa</span></p>
+                        <p><strong>Mesa/Cliente:</strong> <span id="order-target-display">-</span></p>
+                    </div>
+                    
+                    <table class="order-items">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th>Subtotal</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="order-items-list">
+                            <!-- Items se agregarán aquí -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="divider"></div>
+                    
+                    <div style="text-align: right;">
+                        <p><strong>Total: </strong><span id="order-total">0.00</span> Bs.</p>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <button id="cancelar-pedido" class="danger">Cancelar Pedido</button>
+                        <button id="guardar-pedido" class="success">Guardar Pedido</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <h3>Pedidos Activos</h3>
+            <table class="order-items">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tipo</th>
+                        <th>Mesa/Cliente</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="active-orders-list">
+                    <!-- Pedidos activos se mostrarán aquí -->
+                </tbody>
+            </table>
+        </section>
+        
+        <!-- Sección de Facturación -->
+        <section id="facturacion" class="content-section">
+            <h2>Facturación</h2>
+            
+            <div class="invoice-container">
+                <div class="invoice-list">
+                    <h3>Pedidos para Facturar</h3>
+                    <table class="order-items">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo</th>
+                                <th>Mesa/Cliente</th>
+                                <th>Total</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-to-invoice">
+                            <!-- Pedidos para facturar se mostrarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="invoice-details" id="invoice-details" style="display: none;">
+                    <div class="invoice-header">
+                        <h2>COZZOLISI</h2>
+                        <p>Auténtica pizza italiana en Bolivia</p>
+                        <p><strong>FACTURA</strong></p>
+                        <p id="invoice-number">N°: F-001</p>
+                        <p id="invoice-date">Fecha: 01/01/2023</p>
+                    </div>
+                    
+                    <div id="invoice-client-info">
+                        <p><strong>Cliente:</strong> <span id="invoice-client">Mesa 1</span></p>
+                    </div>
+                    
+                    <table class="invoice-items">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoice-items-list">
+                            <!-- Items de factura se mostrarán aquí -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="invoice-total">
+                        <p>TOTAL: <span id="invoice-total">0.00</span> Bs.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment-method">Método de Pago:</label>
+                        <select id="payment-method">
+                            <option value="efectivo">Efectivo</option>
+                            <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                            <option value="transferencia">Transferencia Bancaria</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <button id="cancel-invoice" class="danger">Cancelar</button>
+                        <button id="print-invoice" class="secondary">Imprimir Factura</button>
+                        <button id="complete-invoice" class="success">Completar Factura</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <h3>Facturas Recientes</h3>
+            <table class="order-items">
+                <thead>
+                    <tr>
+                        <th>N° Factura</th>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Total</th>
+                        <th>Método Pago</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="recent-invoices">
+                    <!-- Facturas recientes se mostrarán aquí -->
+                </tbody>
+            </table>
+        </section>
+        
+        <!-- Sección de Reportes -->
+        <section id="reportes" class="content-section">
+            <h2>Reportes de Ventas</h2>
+            
+            <div class="report-filters">
+                <h3>Filtros</h3>
+                <div class="filter-group">
+                    <div class="form-group">
+                        <label for="report-type">Tipo de Reporte:</label>
+                        <select id="report-type">
+                            <option value="daily">Diario</option>
+                            <option value="weekly">Semanal</option>
+                            <option value="monthly">Mensual</option>
+                            <option value="custom">Personalizado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="report-date-group">
+                        <label for="report-date">Fecha:</label>
+                        <input type="date" id="report-date">
+                    </div>
+                    
+                    <div class="form-group" id="report-start-date-group" style="display: none;">
+                        <label for="report-start-date">Desde:</label>
+                        <input type="date" id="report-start-date">
+                    </div>
+                    
+                    <div class="form-group" id="report-end-date-group" style="display: none;">
+                        <label for="report-end-date">Hasta:</label>
+                        <input type="date" id="report-end-date">
+                    </div>
+                </div>
+                
+                <button id="generate-report" class="success">Generar Reporte</button>
+            </div>
+            
+            <div class="report-results">
+                <h3>Resultados</h3>
+                <div id="report-summary">
+                    <p>Seleccione los filtros y genere el reporte</p>
+                </div>
+                
+                <div class="sales-chart">
+                    <p>Gráfico de ventas aparecerá aquí</p>
+                </div>
+                
+                <table class="order-items">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>N° Facturas</th>
+                            <th>Total Ventas</th>
+                            <th>Producto Más Vendido</th>
+                        </tr>
+                    </thead>
+                    <tbody id="report-details">
+                        <!-- Detalles del reporte se mostrarán aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Datos y variables globales
+        let orders = [];
+        let invoices = [];
+        let currentOrder = null;
+        let currentInvoice = null;
+        let invoiceCounter = 1;
+        
+        // Precios de los items
+        const menuItems = {
+            'pizza-margarita': { name: 'Pizza Margarita', price: 45 },
+            'pizza-pepperoni': { name: 'Pizza Pepperoni', price: 50 },
+            'pizza-hawaiana': { name: 'Pizza Hawaiana', price: 55 },
+            'lasagna': { name: 'Lasagna', price: 40 },
+            'spaghetti': { name: 'Spaghetti Bolognesa', price: 35 },
+            'ensalada': { name: 'Ensalada César', price: 25 },
+            'refresco': { name: 'Refresco', price: 8 },
+            'jugo': { name: 'Jugo Natural', price: 12 }
+        };
+        
+        // Inicialización al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            initNavigation();
+            initOrderSection();
+            initInvoiceSection();
+            initReportSection();
+            loadSampleData();
+        });
+        
+        // Función para inicializar la navegación
+        function initNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Remover clase active de todos los links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Agregar clase active al link clickeado
+                    link.classList.add('active');
+                    
+                    // Ocultar todas las secciones
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Mostrar la sección correspondiente
+                    const sectionId = link.getAttribute('data-section');
+                    document.getElementById(sectionId).classList.add('active');
+                    
+                    // Actualizar datos según la sección
+                    if (sectionId === 'pedidos') {
+                        updateActiveOrdersList();
+                    } else if (sectionId === 'facturacion') {
+                        updateOrdersToInvoice();
+                        updateRecentInvoices();
+                    }
+                });
+            });
+        }
+        
+        // Función para inicializar la sección de pedidos
+        function initOrderSection() {
+            // Tipo de pedido
+            const orderTypeOptions = document.querySelectorAll('.order-type-option');
+            orderTypeOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    orderTypeOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    
+                    const orderType = option.getAttribute('data-type');
+                    document.getElementById('order-type-display').textContent = 
+                        orderType === 'mesa' ? 'Mesa' : 
+                        orderType === 'llevar' ? 'Para Llevar' : 'Domicilio';
+                    
+                    // Mostrar/ocultar campos según tipo
+                    document.getElementById('mesa-group').style.display = 
+                        orderType === 'mesa' ? 'block' : 'none';
+                    document.getElementById('cliente-group').style.display = 
+                        orderType !== 'mesa' ? 'block' : 'none';
+                    document.getElementById('direccion-group').style.display = 
+                        orderType === 'domicilio' ? 'block' : 'none';
+                    
+                    // Actualizar info del pedido
+                    if (currentOrder) {
+                        currentOrder.type = orderType;
+                        updateOrderInfoDisplay();
+                    }
+                });
+            });
+            
+            // Agregar item al pedido
+            document.getElementById('agregar-item').addEventListener('click', addItemToOrder);
+            
+            // Guardar pedido
+            document.getElementById('guardar-pedido').addEventListener('click', saveOrder);
+            
+            // Cancelar pedido
+            document.getElementById('cancelar-pedido').addEventListener('click', cancelOrder);
+            
+            // Inicializar nuevo pedido
+            initNewOrder();
+        }
+        
+        // Función para agregar item al pedido
+        function addItemToOrder() {
+            const itemId = document.getElementById('item').value;
+            const quantity = parseInt(document.getElementById('cantidad').value);
+            
+            if (!itemId || isNaN(quantity) || quantity < 1) {
+                alert('Por favor seleccione un item y una cantidad válida');
+                return;
+            }
+            
+            const item = menuItems[itemId];
+            
+            // Verificar si el item ya está en el pedido
+            const existingItem = currentOrder.items.find(i => i.id === itemId);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                currentOrder.items.push({
+                    id: itemId,
+                    name: item.name,
+                    price: item.price,
+                    quantity: quantity
+                });
+            }
+            
+            updateOrderItemsDisplay();
+            document.getElementById('item').value = '';
+            document.getElementById('cantidad').value = 1;
+        }
+        
+        // Función para eliminar item del pedido
+        function removeItemFromOrder(itemId) {
+            currentOrder.items = currentOrder.items.filter(item => item.id !== itemId);
+            updateOrderItemsDisplay();
+        }
+        
+        // Función para actualizar la visualización de items del pedido
+        function updateOrderItemsDisplay() {
+            const orderItemsList = document.getElementById('order-items-list');
+            orderItemsList.innerHTML = '';
+            
+            let total = 0;
+            
+            currentOrder.items.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.price.toFixed(2)} Bs.</td>
+                    <td>${item.quantity}</td>
+                    <td>${subtotal.toFixed(2)} Bs.</td>
+                    <td>
+                        <button class="action-btn delete" onclick="removeItemFromOrder('${item.id}')">Eliminar</button>
+                    </td>
+                `;
+                orderItemsList.appendChild(row);
+            });
+            
+            document.getElementById('order-total').textContent = total.toFixed(2);
+            currentOrder.total = total;
+        }
+        
+        // Función para actualizar la información del pedido
+        function updateOrderInfoDisplay() {
+            let target = '';
+            
+            if (currentOrder.type === 'mesa') {
+                target = currentOrder.table ? `Mesa ${currentOrder.table}` : '-';
+            } else if (currentOrder.type === 'llevar') {
+                target = currentOrder.client || '-';
+            } else {
+                target = currentOrder.client ? `${currentOrder.client} (${currentOrder.address})` : '-';
+            }
+            
+            document.getElementById('order-target-display').textContent = target;
+        }
+        
+        // Función para inicializar un nuevo pedido
+        function initNewOrder() {
+            currentOrder = {
+                id: Date.now(),
+                type: 'mesa',
+                table: '',
+                client: '',
+                address: '',
+                items: [],
+                total: 0,
+                status: 'active',
+                createdAt: new Date()
+            };
+            
+            updateOrderInfoDisplay();
+            updateOrderItemsDisplay();
+        }
+        
+        // Función para guardar el pedido
+        function saveOrder() {
+            // Validar campos según tipo de pedido
+            const orderType = document.querySelector('.order-type-option.active').getAttribute('data-type');
+            
+            if (orderType === 'mesa') {
+                currentOrder.table = document.getElementById('mesa').value;
+                if (!currentOrder.table) {
+                    alert('Por favor seleccione una mesa');
+                    return;
+                }
+            } else {
+                currentOrder.client = document.getElementById('cliente').value;
+                if (!currentOrder.client) {
+                    alert('Por favor ingrese el nombre del cliente');
+                    return;
+                }
+                
+                if (orderType === 'domicilio') {
+                    currentOrder.address = document.getElementById('direccion').value;
+                    if (!currentOrder.address) {
+                        alert('Por favor ingrese la dirección de entrega');
+                        return;
+                    }
+                }
+            }
+            
+            if (currentOrder.items.length === 0) {
+                alert('El pedido no tiene items');
+                return;
+            }
+            
+            // Guardar el pedido
+            const existingOrderIndex = orders.findIndex(o => o.id === currentOrder.id);
+            
+            if (existingOrderIndex !== -1) {
+                orders[existingOrderIndex] = {...currentOrder};
+            } else {
+                orders.push({...currentOrder});
+            }
+            
+            alert('Pedido guardado exitosamente');
+            updateActiveOrdersList();
+            initNewOrder();
+        }
+        
+        // Función para cancelar el pedido
+        function cancelOrder() {
+            if (confirm('¿Está seguro que desea cancelar este pedido?')) {
+                initNewOrder();
+            }
+        }
+        
+        // Función para actualizar la lista de pedidos activos
+        function updateActiveOrdersList() {
+            const activeOrdersList = document.getElementById('active-orders-list');
+            activeOrdersList.innerHTML = '';
+            
+            const activeOrders = orders.filter(order => order.status === 'active');
+            
+            activeOrders.forEach(order => {
+                let target = '';
+                
+                if (order.type === 'mesa') {
+                    target = `Mesa ${order.table}`;
+                } else if (order.type === 'llevar') {
+                    target = order.client;
+                } else {
+                    target = `${order.client} (${order.address})`;
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${order.id}</td>
+                    <td>${order.type === 'mesa' ? 'Mesa' : order.type === 'llevar' ? 'Para Llevar' : 'Domicilio'}</td>
+                    <td>${target}</td>
+                    <td>${order.total.toFixed(2)} Bs.</td>
+                    <td>Activo</td>
+                    <td>
+                        <button class="action-btn" onclick="editOrder(${order.id})">Editar</button>
+                        <button class="action-btn delete" onclick="deleteOrder(${order.id})">Eliminar</button>
+                    </td>
+                `;
+                activeOrdersList.appendChild(row);
+            });
+        }
+        
+        // Función para editar un pedido
+        function editOrder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            currentOrder = {...order};
+            
+            // Seleccionar tipo de pedido
+            const orderTypeBtn = document.querySelector(`.order-type-option[data-type="${order.type}"]`);
+            orderTypeBtn.click();
+            
+            // Llenar campos según tipo
+            if (order.type === 'mesa') {
+                document.getElementById('mesa').value = order.table;
+            } else {
+                document.getElementById('cliente').value = order.client;
+                if (order.type === 'domicilio') {
+                    document.getElementById('direccion').value = order.address;
+                }
+            }
+            
+            updateOrderInfoDisplay();
+            updateOrderItemsDisplay();
+            
+            // Scroll a la sección de pedido
+            document.getElementById('pedidos').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Función para eliminar un pedido
+        function deleteOrder(orderId) {
+            if (confirm('¿Está seguro que desea eliminar este pedido?')) {
+                orders = orders.filter(o => o.id !== orderId);
+                updateActiveOrdersList();
+            }
+        }
+        
+        // Función para inicializar la sección de facturación
+        function initInvoiceSection() {
+            // Imprimir factura
+            document.getElementById('print-invoice').addEventListener('click', printInvoice);
+            
+            // Completar factura
+            document.getElementById('complete-invoice').addEventListener('click', completeInvoice);
+            
+            // Cancelar factura
+            document.getElementById('cancel-invoice').addEventListener('click', cancelInvoice);
+        }
+        
+        // Función para actualizar la lista de pedidos para facturar
+        function updateOrdersToInvoice() {
+            const ordersToInvoice = document.getElementById('orders-to-invoice');
+            ordersToInvoice.innerHTML = '';
+            
+            const activeOrders = orders.filter(order => order.status === 'active');
+            
+            activeOrders.forEach(order => {
+                let target = '';
+                
+                if (order.type === 'mesa') {
+                    target = `Mesa ${order.table}`;
+                } else if (order.type === 'llevar') {
+                    target = order.client;
+                } else {
+                    target = `${order.client} (${order.address})`;
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${order.id}</td>
+                    <td>${order.type === 'mesa' ? 'Mesa' : order.type === 'llevar' ? 'Para Llevar' : 'Domicilio'}</td>
+                    <td>${target}</td>
+                    <td>${order.total.toFixed(2)} Bs.</td>
+                    <td>
+                        <button class="action-btn" onclick="startInvoice(${order.id})">Facturar</button>
+                    </td>
+                `;
+                ordersToInvoice.appendChild(row);
+            });
+        }
+        
+        // Función para comenzar una factura
+        function startInvoice(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            currentInvoice = {
+                orderId: order.id,
+                number: `F-${invoiceCounter.toString().padStart(3, '0')}`,
+                date: new Date(),
+                client: order.type === 'mesa' ? `Mesa ${order.table}` : order.client,
+                address: order.type === 'domicilio' ? order.address : null,
+                items: [...order.items],
+                total: order.total,
+                paymentMethod: 'efectivo',
+                status: 'pending'
+            };
+            
+            // Mostrar detalles de factura
+            document.getElementById('invoice-details').style.display = 'block';
+            document.getElementById('invoice-number').textContent = `N°: ${currentInvoice.number}`;
+            document.getElementById('invoice-date').textContent = `Fecha: ${formatDate(currentInvoice.date)}`;
+            document.getElementById('invoice-client').textContent = currentInvoice.client;
+            
+            // Llenar items de factura
+            const invoiceItemsList = document.getElementById('invoice-items-list');
+            invoiceItemsList.innerHTML = '';
+            
+            currentInvoice.items.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.price.toFixed(2)} Bs.</td>
+                    <td>${item.quantity}</td>
+                    <td>${subtotal.toFixed(2)} Bs.</td>
+                `;
+                invoiceItemsList.appendChild(row);
+            });
+            
+            document.getElementById('invoice-total').textContent = currentInvoice.total.toFixed(2);
+            document.getElementById('payment-method').value = currentInvoice.paymentMethod;
+        }
+        
+        // Función para imprimir factura
+        function printInvoice() {
+            // En una implementación real, esto abriría el diálogo de impresión
+            alert('Funcionalidad de impresión se activaría aquí');
+        }
+        
+        // Función para completar factura
+        function completeInvoice() {
+            if (!currentInvoice) return;
+            
+            currentInvoice.paymentMethod = document.getElementById('payment-method').value;
+            currentInvoice.status = 'completed';
+            currentInvoice.completedAt = new Date();
+            
+            // Marcar pedido como completado
+            const orderIndex = orders.findIndex(o => o.id === currentInvoice.orderId);
+            if (orderIndex !== -1) {
+                orders[orderIndex].status = 'completed';
+            }
+            
+            // Agregar a facturas
+            invoices.push({...currentInvoice});
+            invoiceCounter++;
+            
+            // Actualizar listas
+            updateOrdersToInvoice();
+            updateRecentInvoices();
+            
+            // Limpiar factura actual
+            cancelInvoice();
+            
+            alert('Factura completada exitosamente');
+        }
+        
+        // Función para cancelar factura
+        function cancelInvoice() {
+            currentInvoice = null;
+            document.getElementById('invoice-details').style.display = 'none';
+        }
+        
+        // Función para actualizar facturas recientes
+        function updateRecentInvoices() {
+            const recentInvoices = document.getElementById('recent-invoices');
+            recentInvoices.innerHTML = '';
+            
+            // Mostrar las últimas 10 facturas
+            const lastInvoices = [...invoices].reverse().slice(0, 10);
+            
+            lastInvoices.forEach(invoice => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${invoice.number}</td>
+                    <td>${formatDate(invoice.date)}</td>
+                    <td>${invoice.client}</td>
+                    <td>${invoice.total.toFixed(2)} Bs.</td>
+                    // ...existing code...
+                    <td>${invoice.paymentMethod === 'efectivo' ? 'Efectivo' : invoice.paymentMethod === 'tarjeta' ? 'Tarjeta' : 'Transferencia'}</td>
+                    <td>
+                        <button class="action-btn" onclick="viewInvoice('${invoice.number}')">Ver</button>
+                    </td>
+                `;
+                recentInvoices.appendChild(row);
+            });
+        }
+
+        // Función para ver una factura (solo muestra los detalles)
+        function viewInvoice(invoiceNumber) {
+            const invoice = invoices.find(inv => inv.number === invoiceNumber);
+            if (!invoice) return;
+
+            currentInvoice = {...invoice};
+
+            document.getElementById('invoice-details').style.display = 'block';
+            document.getElementById('invoice-number').textContent = `N°: ${currentInvoice.number}`;
+            document.getElementById('invoice-date').textContent = `Fecha: ${formatDate(currentInvoice.date)}`;
+            document.getElementById('invoice-client').textContent = currentInvoice.client;
+
+            // Llenar items de factura
+            const invoiceItemsList = document.getElementById('invoice-items-list');
+            invoiceItemsList.innerHTML = '';
+            currentInvoice.items.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.price.toFixed(2)} Bs.</td>
+                    <td>${item.quantity}</td>
+                    <td>${subtotal.toFixed(2)} Bs.</td>
+                `;
+                invoiceItemsList.appendChild(row);
+            });
+
+            document.getElementById('invoice-total').textContent = currentInvoice.total.toFixed(2);
+            document.getElementById('payment-method').value = currentInvoice.paymentMethod;
+        }
+
+        // Función para inicializar la sección de reportes
+        function initReportSection() {
+            document.getElementById('report-type').addEventListener('change', function() {
+                const type = this.value;
+                document.getElementById('report-date-group').style.display = (type === 'daily' || type === 'weekly' || type === 'monthly') ? 'block' : 'none';
+                document.getElementById('report-start-date-group').style.display = type === 'custom' ? 'block' : 'none';
+                document.getElementById('report-end-date-group').style.display = type === 'custom' ? 'block' : 'none';
+            });
+
+            document.getElementById('generate-report').addEventListener('click', generateReport);
+        }
+
+        // Función para generar el reporte
+        function generateReport() {
+            // Para simplificar, solo muestra un resumen básico
+            const reportSummary = document.getElementById('report-summary');
+            const reportDetails = document.getElementById('report-details');
+            reportDetails.innerHTML = '';
+
+            // Filtrar facturas según fechas
+            let filteredInvoices = [...invoices];
+            const type = document.getElementById('report-type').value;
+
+            let startDate, endDate;
+            if (type === 'daily') {
+                const date = document.getElementById('report-date').value;
+                filteredInvoices = filteredInvoices.filter(inv => formatInputDate(inv.date) === date);
+            } else if (type === 'weekly') {
+                const date = document.getElementById('report-date').value;
+                if (date) {
+                    const d = new Date(date);
+                    const weekStart = new Date(d.setDate(d.getDate() - d.getDay()));
+                    const weekEnd = new Date(weekStart);
+                    weekEnd.setDate(weekStart.getDate() + 6);
+                    filteredInvoices = filteredInvoices.filter(inv => {
+                        const invDate = new Date(inv.date);
+                        return invDate >= weekStart && invDate <= weekEnd;
+                    });
+                }
+            } else if (type === 'monthly') {
+                const date = document.getElementById('report-date').value;
+                if (date) {
+                    const d = new Date(date);
+                    const month = d.getMonth();
+                    const year = d.getFullYear();
+                    filteredInvoices = filteredInvoices.filter(inv => {
+                        const invDate = new Date(inv.date);
+                        return invDate.getMonth() === month && invDate.getFullYear() === year;
+                    });
+                }
+            } else if (type === 'custom') {
+                startDate = document.getElementById('report-start-date').value;
+                endDate = document.getElementById('report-end-date').value;
+                if (startDate && endDate) {
+                    const start = new Date(startDate);
+                    const end = new Date(endDate);
+                    filteredInvoices = filteredInvoices.filter(inv => {
+                        const invDate = new Date(inv.date);
+                        return invDate >= start && invDate <= end;
+                    });
+                }
+            }
+
+            // Resumen
+            const totalVentas = filteredInvoices.reduce((sum, inv) => sum + inv.total, 0);
+            const nFacturas = filteredInvoices.length;
+
+            // Producto más vendido
+            const productCount = {};
+            filteredInvoices.forEach(inv => {
+                inv.items.forEach(item => {
+                    productCount[item.name] = (productCount[item.name] || 0) + item.quantity;
+                });
+            });
+            let masVendido = '-';
+            let maxCount = 0;
+            for (const [name, count] of Object.entries(productCount)) {
+                if (count > maxCount) {
+                    masVendido = name;
+                    maxCount = count;
+                }
+            }
+
+            reportSummary.innerHTML = `
+                <p><strong>Total Ventas:</strong> ${totalVentas.toFixed(2)} Bs.</p>
+                <p><strong>N° Facturas:</strong> ${nFacturas}</p>
+                <p><strong>Producto Más Vendido:</strong> ${masVendido}</p>
+            `;
+
+            // Detalles (por día)
+            const grouped = {};
+            filteredInvoices.forEach(inv => {
+                const fecha = formatInputDate(inv.date);
+                if (!grouped[fecha]) grouped[fecha] = { total: 0, count: 0, productos: {} };
+                grouped[fecha].total += inv.total;
+                grouped[fecha].count += 1;
+                inv.items.forEach(item => {
+                    grouped[fecha].productos[item.name] = (grouped[fecha].productos[item.name] || 0) + item.quantity;
+                });
+            });
+
+            for (const fecha in grouped) {
+                // Producto más vendido ese día
+                let prod = '-';
+                let max = 0;
+                for (const [name, count] of Object.entries(grouped[fecha].productos)) {
+                    if (count > max) {
+                        prod = name;
+                        max = count;
+                    }
+                }
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${fecha}</td>
+                    <td>${grouped[fecha].count}</td>
+                    <td>${grouped[fecha].total.toFixed(2)} Bs.</td>
+                    <td>${prod}</td>
+                `;
+                reportDetails.appendChild(row);
+            }
+        }
+
+        // Función para formatear fecha
+        function formatDate(date) {
+            const d = new Date(date);
+            return d.toLocaleDateString('es-BO');
+        }
+        function formatInputDate(date) {
+            const d = new Date(date);
+            return d.toISOString().slice(0, 10);
+        }
+
+        // Cargar datos de ejemplo
+        function loadSampleData() {
+            // Puedes agregar aquí algunos pedidos y facturas de ejemplo si lo deseas
+        }
+
+        // Exponer funciones globales para botones inline
+        window.removeItemFromOrder = removeItemFromOrder;
+        window.editOrder = editOrder;
+        window.deleteOrder = deleteOrder;
+        window.startInvoice = startInvoice;
+        window.viewInvoice = viewInvoice;
+    </script>
+</body>
+</html>
